@@ -9,7 +9,7 @@
 #include "helpers.h"
 #include "requests.h"
 
-#include "./body.cpp"
+#include "./request.cpp"
 
 #define HOST "34.254.242.81"
 #define PORT 8080
@@ -19,25 +19,8 @@ int main(int argc, char *argv[])
     char *message;
     char *response;
     int sockfd;
-    
-    sockfd = open_connection(HOST, 8080, AF_INET, SOCK_STREAM, 0);
-        
-    // // Ex 1.1: GET dummy from main server
-    // message = compute_get_request(HOST, "/api/v1/dummy", NULL, NULL, 0);
-    // send_to_server(sockfd, message);
-    // response = receive_from_server(sockfd);
 
-    // // Ex 1.2: POST dummy and print response from main server
-    // char *body_data_fields[2];
-    // body_data_fields[0] = calloc(LINELEN, sizeof(char));
-    // body_data_fields[1] = calloc(LINELEN, sizeof(char));
-    // strcpy(body_data_fields[0], "username=student");
-    // strcpy(body_data_fields[1], "password=student");
-
-    // message = compute_post_request(HOST, "/api/v1/dummy", "application/x-www-form-urlencoded", body_data_fields, 2, NULL, 0);
-    // send_to_server(sockfd, message);
-    // response = receive_from_server(sockfd);
-    // // printf("%s\n", response);
+    sockfd = open_connection(HOST, PORT, AF_INET, SOCK_STREAM, 0);
 
     /*
         REGISTER
@@ -45,8 +28,9 @@ int main(int argc, char *argv[])
 
     char route = char("/api/v1/tema/auth/register");
 
+    Body body = Body();
 
-    message = compute_post_request(HOST, &route , "application/json", body_data_fields, 2, NULL, 0);
+    message = compute_post_request(HOST, &route, "application/json", body.fields, body.nr_fields, NULL, 0);
     send_to_server(sockfd, message);
     response = receive_from_server(sockfd);
     // printf("%s\n", response);

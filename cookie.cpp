@@ -1,20 +1,20 @@
-class Body
+class Cookie
 {
 public:
   int nr_fields;
   char **fields;
 
-  Body()
+  Cookie()
   {
     this->nr_fields = 0;
   }
-  Body(int nr_fields, char **fields)
+  Cookie(int nr_fields, char **fields)
   {
     this->nr_fields = nr_fields;
     this->fields = fields;
   };
 
-  void free_body()
+  void free_cookie()
   {
     for (int i = 0; i < nr_fields; i++)
     {
