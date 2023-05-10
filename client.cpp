@@ -9,10 +9,32 @@
 #include "helpers.h"
 #include "requests.h"
 
-#include "./request.cpp"
+#include "iostream"
 
-#define HOST "34.254.242.81"
+#include "json.hpp"
+
+using json = nlohmann::json;
+
 #define PORT 8080
+#define HOST "34.254.242.81"
+#define CONTENT_TYPE "application/json"
+
+#define REGISTER_ROUTE "/api/v1/tema/auth/register"
+#define LOGIN_ROUTE "/api/v1/tema/auth/login"
+#define LOGOUT_ROUTE "/api/v1/tema/auth/logout"
+#define LIBRARY_ACCESS_ROUTE "/api/v1/tema/library/access"
+#define LIBRARY_BOOKS_ROUTE "/api/v1/tema/library/books"
+
+#define JSON_INDENT 2
+
+char *register_req();
+char *login_req();
+char *logout_req();
+char *enter_library_req();
+char *get_books_req();
+char *get_book_req();
+char *add_book_req();
+char *delete_book_req();
 
 int main(int argc, char *argv[])
 {
@@ -20,34 +42,86 @@ int main(int argc, char *argv[])
     char *response;
     int sockfd;
 
-    sockfd = open_connection(HOST, PORT, AF_INET, SOCK_STREAM, 0);
+    sockfd = open_connection((char *)HOST, PORT, AF_INET, SOCK_STREAM, 0);
 
-    /*
-        REGISTER
-    */
+    std::string command;
+    while (1)
+    {
+        std::cin >> command;
+        if (command == "register")
+        {
+            // register
+        }
+        else if (command == "login")
+        {
+            // login
+        }
+        else if (command == "enter_library")
+        {
+            // enter_library
+        }
+        else if (command == "get_books")
+        {
+            // get_books
+        }
+        else if (command == "get_book")
+        {
+            // get_book
+        }
+        else if (command == "add_book")
+        {
+            // add_book
+        }
+        else if (command == "delete_book")
+        {
+            // delete_book
+        }
+        else if (command == "logout")
+        {
+            // logout
+        }
+        else if (command == "exit")
+        {
+            break;
+        }
+        else
+        {
+            printf("Invalid command\n");
+        }
 
-    char route = char("/api/v1/tema/auth/register");
-
-    Body body = Body();
-
-    message = compute_post_request(HOST, &route, "application/json", body.fields, body.nr_fields, NULL, 0);
-    send_to_server(sockfd, message);
-    response = receive_from_server(sockfd);
-    // printf("%s\n", response);
-    // // Ex 3: GET weather key from main server
-
-    message = compute_get_request(HOST, "/api/v1/weather/key", NULL, NULL, 0);
-    send_to_server(sockfd, message);
-    response = receive_from_server(sockfd);
-    printf("%s\n", response);
-    // Ex 4: GET weather data from OpenWeather API
-    // Ex 5: POST weather data for verification to main server
-    // Ex 6: Logout from main server
-
-    // BONUS: make the main server return "Already logged in!"
-
-    // free the allocated data at the end!
-    close_connection(sockfd);
+        message = register_req();
+        send_to_server(sockfd, message);
+        response = receive_from_server(sockfd);
+        printf("%s\n", response);
+    }
 
     return 0;
+}
+
+char *register_req()
+{
+    json register_data;
+    std::string username, password;
+    std::cout << "username :" << std::endl;
+    std::cin >> username;
+    std::cout << "password :" << std::endl;
+    std::cin >> password;
+    register_data["username"] = username;
+    register_data["password"] = password;
+
+    return compute_post_request((char *)HOST, (char *)REGISTER_ROUTE, (char *)CONTENT_TYPE, (char *)register_data.dump(JSON_INDENT).c_str(), NULL);
+}
+
+char *login_req()
+{
+    json login_data;
+    std::string username, password;
+    std::cout << "username :" << std::endl;
+    std::cin >> username;
+    std::cout << "password :" << std::endl;
+    std::cin >> password;
+    login_data["username"] = username;
+    login_data["password"] = password;
+
+    return compute_post_request((char *)HOST, (char *)LOGIN_ROUTE, (char *)CONTENT_TYPE, (char *)login_data.dump(JSON_INDENT).c_str(), NULL);
 }

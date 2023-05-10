@@ -1,8 +1,10 @@
-CC=gcc c++
+CC=g++
 CFLAGS=-I.
 
-client: client.c requests.c helpers.c buffer.c
-	$(CC) -o client client.c requests.c helpers.c buffer.c -Wall
+CPP_FILES := $(wildcard *.cpp)
+
+client: ${CPP_FILES}
+	$(CC) -o client ${CPP_FILES} -Wall
 
 run: client
 	./client
