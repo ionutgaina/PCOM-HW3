@@ -1,22 +1,37 @@
-#include <stdio.h>      /* printf, sprintf */
-#include <stdlib.h>     /* exit, atoi, malloc, free */
-#include <unistd.h>     /* read, write, close */
 #include <string.h>     /* memcpy, memset */
 #include <sys/socket.h> /* socket, connect */
 #include <netinet/in.h> /* struct sockaddr_in, struct sockaddr */
 #include <netdb.h>      /* struct hostent, gethostbyname */
 #include <arpa/inet.h>
-#include "helpers.h"
-#include "requests.h"
+#include <iostream>
+#include <stdio.h>      /* printf, sprintf */
+#include <stdlib.h>     /* exit, atoi, malloc, free */
+#include <unistd.h>     /* read, write, close */
+#include <vector>
+#include <fstream>
 
-#include "./request.cpp"
 
-#define HOST "34.254.242.81"
+#include "utils/helpers.h"
+#include "utils/json.hpp"
+
+using json = nlohmann::json;
+
+#include "classes/request.cpp"
+
 #define PORT 8080
+#define HOST "34.254.242.81"
+#define POST "POST"
+#define GET "GET"
+
+#define REGISTER_ROUTE "/api/v1/tema/auth/register"
+#define LOGIN_ROUTE "/api/v1/tema/auth/login"
+#define LOGOUT_ROUTE "/api/v1/tema/auth/logout"
+#define LIBRARY_ACCESS_ROUTE "/api/v1/tema/library/access"
+#define LIBRARY_BOOKS_ROUTE "/api/v1/tema/library/books"
+
 
 int main(int argc, char *argv[])
 {
-    char *message;
     char *response;
     int sockfd;
 
@@ -26,18 +41,15 @@ int main(int argc, char *argv[])
         REGISTER
     */
 
-    char route = char("/api/v1/tema/auth/register");
+    Request register_request = Request(HOST, POST, REGISTER_ROUTE);
 
-    Body body = Body();
+    register_request.body.add_field("username", "test");
+    register_request.body.add_field("password", "test");
 
-    message = compute_post_request(HOST, &route, "application/json", body.fields, body.nr_fields, NULL, 0);
-    send_to_server(sockfd, message);
-    response = receive_from_server(sockfd);
-    // printf("%s\n", response);
-    // // Ex 3: GET weather key from main server
+    std::string request_string = register_request.create_request();
+    std::cout << request_string << std::endl;
 
-    message = compute_get_request(HOST, "/api/v1/weather/key", NULL, NULL, 0);
-    send_to_server(sockfd, message);
+    send_to_server(sockfd, request_string.c_str());
     response = receive_from_server(sockfd);
     printf("%s\n", response);
     // Ex 4: GET weather data from OpenWeather API

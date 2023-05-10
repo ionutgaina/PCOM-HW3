@@ -26,7 +26,7 @@ void compute_message(char *message, const char *line)
     strcat(message, "\r\n");
 }
 
-int open_connection(char *host_ip, int portno, int ip_type, int socket_type, int flag)
+int open_connection(const char *host_ip, int portno, int ip_type, int socket_type, int flag)
 {
     struct sockaddr_in serv_addr;
     int sockfd = socket(ip_type, socket_type, flag);
@@ -50,7 +50,7 @@ void close_connection(int sockfd)
     close(sockfd);
 }
 
-void send_to_server(int sockfd, char *message)
+void send_to_server(int sockfd, const char *message)
 {
     int bytes, sent = 0;
     int total = strlen(message);
