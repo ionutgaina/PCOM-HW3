@@ -102,9 +102,9 @@ class Command {
       case CommandType::ENTER_LIBRARY:
         return this->enter_library_req();
         break;
-        // case CommandType::GET_BOOKS:
-        //   return this->get_books_req();
-        //   break;
+      case CommandType::GET_BOOKS:
+        return this->get_books_req();
+        break;
         // case CommandType::GET_BOOK:
         //   return this->get_book_req();
         //   break;
@@ -151,4 +151,6 @@ class Command {
   std::string logout_req() { return this->request.create_request(); }
 
   std::string enter_library_req() { return this->request.create_request(); }
+
+  std::string get_books_req() { return this->request.create_request(); }
 };

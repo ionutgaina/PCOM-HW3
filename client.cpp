@@ -58,6 +58,10 @@ int main(int argc, char *argv[]) {
       token = res.get_token();
     }
 
+    if (command == "get_books") {
+        res.print_books();
+    }
+
     if (command == "logout") {
       token = "";
       session_cookie = "";

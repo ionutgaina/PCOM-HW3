@@ -48,13 +48,20 @@ class Response {
     return "";
   }
 
+  void print_books() {
+    std::string body = this->get_body();
+    if (json::accept(body)) {
+      json body_j = json::parse(body);
+      std::cout << body_j.dump(JSON_ALIGN) << std::endl;
+    }
+  }
+
   void print_result() {
     std::string body = this->get_body();
     std::string status_code = this->get_status_code();
-
     if (json::accept(body)) {
       json body_j = json::parse(body);
-      if (body_j["error"].is_null() == false) {
+      if (body_j.is_array() == false && body_j["error"].is_null() == false) {
         std::string error = body_j["error"];
         error.erase(std::remove(error.begin(), error.end(), '\"'), error.end());
         std::cout << status_code << " - " << error << std::endl;
