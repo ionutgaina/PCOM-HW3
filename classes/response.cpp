@@ -22,17 +22,30 @@ class Response {
     return status.substr(0, status.find('\r'));
   }
 
-  std::string get_token() {
+  std::string get_session_cookie() {
     std::size_t start = response.find("connect.sid=") + 12;
     if (start == std::string::npos) {
       return "";
     }
-    std::string token = response.substr(start);
-    std::size_t end = token.find(';');
+    std::string session_cookie = response.substr(start);
+    std::size_t end = session_cookie.find(';');
     if (end == std::string::npos) {
       return "";
     }
-    return token.substr(0, end);
+    return session_cookie.substr(0, end);
+  }
+
+  std::string get_token() {
+    std::string body = this->get_body();
+    if (json::accept(body)) {
+      json body_j = json::parse(body);
+      if (body_j["token"].is_null() == false) {
+        std::string token = body_j["token"];
+        token.erase(std::remove(token.begin(), token.end(), '\"'), token.end());
+        return token;
+      }
+    }
+    return "";
   }
 
   void print_result() {
@@ -41,7 +54,7 @@ class Response {
 
     if (json::accept(body)) {
       json body_j = json::parse(body);
-      if (body_j["error"] != NULL) {
+      if (body_j["error"].is_null() == false) {
         std::string error = body_j["error"];
         error.erase(std::remove(error.begin(), error.end(), '\"'), error.end());
         std::cout << status_code << " - " << error << std::endl;

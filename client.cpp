@@ -24,7 +24,8 @@ char *parse_string(std::string my_string);
 
 int main(int argc, char *argv[]) {
   char *response;
-  std::string token;
+  std::string token = "";
+  std::string session_cookie = "";
   int sockfd;
 
   while (1) {
@@ -35,7 +36,7 @@ int main(int argc, char *argv[]) {
       break;
     }
 
-    Command cmd = Command(command, &token);
+    Command cmd = Command(command, &session_cookie, &token);
 
     if (!cmd.request.is_valid()) {
       continue;
@@ -44,18 +45,22 @@ int main(int argc, char *argv[]) {
     sockfd = open_connection(HOST, PORT, AF_INET, SOCK_STREAM, 0);
 
     std::string request_string = cmd.create_request();
-    std::cout << request_string << std::endl;
     send_to_server(sockfd, request_string.c_str());
     response = receive_from_server(sockfd);
     Response res = Response(response);
     res.print_result();
 
     if (command == "login") {
+      session_cookie = res.get_session_cookie();
+    }
+
+    if (command == "enter_library") {
       token = res.get_token();
     }
 
     if (command == "logout") {
       token = "";
+      session_cookie = "";
     }
 
     if (response != NULL || response != nullptr) {
