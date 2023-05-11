@@ -9,3 +9,5 @@
 #define LOGOUT_ROUTE "/api/v1/tema/auth/logout"
 #define LIBRARY_ACCESS_ROUTE "/api/v1/tema/library/access"
 #define LIBRARY_BOOKS_ROUTE "/api/v1/tema/library/books"
+
+#define JSON_ALIGN 2

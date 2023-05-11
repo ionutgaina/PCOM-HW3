@@ -4,55 +4,61 @@
 #include <netdb.h>      /* struct hostent, gethostbyname */
 #include <arpa/inet.h>
 #include <iostream>
-#include <stdio.h>      /* printf, sprintf */
-#include <stdlib.h>     /* exit, atoi, malloc, free */
-#include <unistd.h>     /* read, write, close */
+#include <stdio.h>  /* printf, sprintf */
+#include <stdlib.h> /* exit, atoi, malloc, free */
+#include <unistd.h> /* read, write, close */
 #include <vector>
 #include <fstream>
 
-
 #include "utils/helpers.h"
+#include "utils/constants.h"
 #include "utils/json.hpp"
 
 using json = nlohmann::json;
 
 #include "classes/command.cpp"
 
-#define PORT 8080
-#define HOST "34.254.242.81"
-#define POST "POST"
-#define GET "GET"
-
-#define REGISTER_ROUTE "/api/v1/tema/auth/register"
-#define LOGIN_ROUTE "/api/v1/tema/auth/login"
-#define LOGOUT_ROUTE "/api/v1/tema/auth/logout"
-#define LIBRARY_ACCESS_ROUTE "/api/v1/tema/library/access"
-#define LIBRARY_BOOKS_ROUTE "/api/v1/tema/library/books"
-
+char *parse_string(std::string my_string);
 
 int main(int argc, char *argv[])
 {
     char *response;
+    std::string token;
     int sockfd;
 
 
-    while(1) {
-      sockfd = open_connection(HOST, PORT, AF_INET, SOCK_STREAM, 0);
+    while (1)
+    {
+        std::string command;
+        std::cin >> command;
+        if (command == "exit")
+        {
+            std::cout << "Exiting..." << std::endl;
+            break;
+        }
 
-      std::string cmd;
-      std::cin >> cmd;
+        Command cmd = Command(command, &token);
 
-      Command cmd = Command(cmd, NULL);
+        if (!cmd.request.is_valid())
+        {
+            continue;
+        }
 
-      std::string request_string;
+        sockfd = open_connection(HOST, PORT, AF_INET, SOCK_STREAM, 0);
 
-      send_to_server(sockfd, request_string.c_str());
-      close_connection(sockfd);
+        std::string request_string = cmd.create_request();
+        std::cout << request_string << std::endl;
+        send_to_server(sockfd, request_string.c_str());
+
+        response = receive_from_server(sockfd);
+        if (response != NULL || response != nullptr) {
+          free(response);
+        }
+        close_connection(sockfd);
     }
-    response = receive_from_server(sockfd);
-    
 
-    // free the allocated data at the end!
+    // // free the allocated data at the end!
+    token.clear();
 
     return 0;
 }

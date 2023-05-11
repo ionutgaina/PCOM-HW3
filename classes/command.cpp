@@ -58,7 +58,7 @@ public:
       break;
     case CommandType::LOGOUT:
       this->request = Request(HOST, GET, LOGOUT_ROUTE);
-      token->clear();
+      token = NULL;
       break;
     case CommandType::ENTER_LIBRARY:
       this->request = Request(HOST, GET, LIBRARY_ACCESS_ROUTE);

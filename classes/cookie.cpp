@@ -12,6 +12,16 @@ public:
     this->fields[key] = value;
   };
 
+  std::string get_cookies()
+  {
+    std::string cookies = "";
+    for (auto it = this->fields.begin(); it != this->fields.end(); it++)
+    {
+      cookies += it->first + "=" + it->second + "; ";
+    }
+    return cookies;
+  };
+
   void print_cookie()
   {
     for (auto it = this->fields.begin(); it != this->fields.end(); it++)

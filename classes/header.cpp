@@ -12,6 +12,16 @@ public:
     this->fields[key] = value;
   };
 
+  std::string get_headers()
+  {
+    std::string headers = "";
+    for (auto it = this->fields.begin(); it != this->fields.end(); it++)
+    {
+      headers += it->first + ": " + it->second + "\r\n";
+    }
+    return headers;
+  };
+
   void print_header()
   {
     for (auto it = this->fields.begin(); it != this->fields.end(); it++)
