@@ -12,6 +12,8 @@ public:
     Header headers = Header();
     Body body = Body();
 
+    Request(){};
+
     Request(std::string host)
     {
         this->host = host;
