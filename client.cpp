@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
 
   while (1) {
     std::string command;
-    std::cin >> command;
+    std::cout << "Enter command: " << std::endl;
+    std::getline(std::cin, command);
     if (command == "exit") {
       std::cout << "Exiting..." << std::endl;
       break;

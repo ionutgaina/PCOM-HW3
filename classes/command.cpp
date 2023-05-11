@@ -126,8 +126,12 @@ class Command {
     std::string username, password;
     std::cout << "username :" << std::endl;
     std::getline(std::cin, username);
+    if (!this->validate_input("username", username, false, true, true))
+      return "";
     std::cout << "password :" << std::endl;
-    std::cin >> password;
+    std::getline(std::cin, password);
+    if (!this->validate_input("password", password, false, true, true))
+      return "";
 
     this->request.body.add_field("username", username);
     this->request.body.add_field("password", password);
@@ -138,9 +142,13 @@ class Command {
   std::string login_req() {
     std::string username, password;
     std::cout << "username :" << std::endl;
-    std::cin >> username;
+    std::getline(std::cin, username);
+    if (!this->validate_input("username", username, false, true, true))
+      return "";
     std::cout << "password :" << std::endl;
-    std::cin >> password;
+    std::getline(std::cin, password);
+    if (!this->validate_input("password", password, false, true, true))
+      return "";
 
     this->request.body.add_field("username", username);
     this->request.body.add_field("password", password);
@@ -159,20 +167,21 @@ class Command {
     std::string title, author, genre, publisher, page_count;
     std::cout << "title :" << std::endl;
     std::getline(std::cin, title);
+    if (!this->validate_input("title", title, false, true, true)) return "";
     std::cout << "author :" << std::endl;
     std::getline(std::cin, author);
+    if (!this->validate_input("author", author, false, true, true)) return "";
     std::cout << "genre :" << std::endl;
     std::getline(std::cin, genre);
+    if (!this->validate_input("genre", genre, false, true, true)) return "";
     std::cout << "publisher :" << std::endl;
     std::getline(std::cin, publisher);
+    if (!this->validate_input("publisher", publisher, false, true, true))
+      return "";
     std::cout << "page_count :" << std::endl;
     std::getline(std::cin, page_count);
-
-    while (!isNumber(page_count)) {
-      std::cout << "page_count must be a number" << std::endl;
-      std::cout << "page_count :" << std::endl;
-      std::getline(std::cin, page_count);
-    }
+    if (!this->validate_input("page_count", page_count, true, true, true))
+      return "";
 
     int page_count_int = std::stoi(page_count);
 
@@ -197,23 +206,23 @@ class Command {
     return true;
   }
 
-  std::string validate_input(std::string field, std::string input,
-                             bool isNumber, bool isEmpty, bool noSpaces) {
+  bool validate_input(std::string field, std::string input, bool isNumber,
+                      bool isEmpty, bool noSpaces) {
     if (isNumber && this->isNumber(input)) {
       std::cout << field << " must be a number" << std::endl;
-      return "";
+      return false;
     }
 
-    if (isEmpty && input.length() == 0) {
+    if (!isEmpty && input.length() == 0) {
       std::cout << field << " cannot be empty" << std::endl;
-      return "";
+      return false;
     }
 
     if (noSpaces && input.find(" ") != std::string::npos) {
       std::cout << field << " cannot contain spaces" << std::endl;
-      return "";
+      return false;
     }
 
-    return input;
+    return true;
   }
 };
