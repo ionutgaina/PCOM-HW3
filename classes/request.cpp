@@ -1,7 +1,10 @@
+#include "../utils/json.hpp"
 #include "../utils/requests.h"
 #include "body.cpp"
 #include "cookie.cpp"
 #include "header.cpp"
+
+using json = nlohmann::json;
 
 class Request {
  public:
@@ -24,7 +27,16 @@ class Request {
 
   std::string create_request() {
     json j_body = get_json(this->body.fields);
+
+    json j_body_int = get_json(this->body.fields_int);
+
+    for (json::iterator it = j_body_int.begin(); it != j_body_int.end(); ++it) {
+      j_body[it.key()] = it.value();
+    }
+
     std::string body_data = j_body.dump(JSON_ALIGN);
+
+    std::cout << body_data << std::endl;
 
     std::string request = this->method + " " + this->path + " HTTP/1.1\r\n";
     request += "Host: " + this->host + "\r\n";
@@ -56,6 +68,11 @@ class Request {
 
  private:
   json get_json(std::map<std::string, std::string> data) {
+    json j_map(data);
+    return j_map;
+  };
+
+  json get_json(std::map<std::string, int> data) {
     json j_map(data);
     return j_map;
   };

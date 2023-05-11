@@ -57,7 +57,8 @@
     "streambuf": "cpp",
     "cinttypes": "cpp",
     "typeinfo": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "variant": "cpp"
   },
   "clang-format.style": "Google"
 }

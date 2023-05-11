@@ -108,9 +108,9 @@ class Command {
         // case CommandType::GET_BOOK:
         //   return this->get_book_req();
         //   break;
-        // case CommandType::ADD_BOOK:
-        //   return this->add_book_req();
-        //   break;
+      case CommandType::ADD_BOOK:
+        return this->add_book_req();
+        break;
         // case CommandType::DELETE_BOOK:
         //   return this->delete_book_req();
         //   break;
@@ -125,7 +125,7 @@ class Command {
   std::string register_req() {
     std::string username, password;
     std::cout << "username :" << std::endl;
-    std::cin >> username;
+    std::getline(std::cin, username);
     std::cout << "password :" << std::endl;
     std::cin >> password;
 
@@ -153,4 +153,67 @@ class Command {
   std::string enter_library_req() { return this->request.create_request(); }
 
   std::string get_books_req() { return this->request.create_request(); }
+
+  std::string add_book_req() {
+    // ignore the newline character
+    std::string title, author, genre, publisher, page_count;
+    std::cout << "title :" << std::endl;
+    std::getline(std::cin, title);
+    std::cout << "author :" << std::endl;
+    std::getline(std::cin, author);
+    std::cout << "genre :" << std::endl;
+    std::getline(std::cin, genre);
+    std::cout << "publisher :" << std::endl;
+    std::getline(std::cin, publisher);
+    std::cout << "page_count :" << std::endl;
+    std::getline(std::cin, page_count);
+
+    while (!isNumber(page_count)) {
+      std::cout << "page_count must be a number" << std::endl;
+      std::cout << "page_count :" << std::endl;
+      std::getline(std::cin, page_count);
+    }
+
+    int page_count_int = std::stoi(page_count);
+
+    this->request.body.add_field("title", title);
+    this->request.body.add_field("author", author);
+    this->request.body.add_field("genre", genre);
+    this->request.body.add_field("publisher", publisher);
+    this->request.body.add_field("page_count", page_count_int);
+
+    return this->request.create_request();
+  }
+
+  bool isNumber(std::string input) {
+    if (input.length() == 0) {
+      return false;
+    }
+    for (char c : input) {
+      if (!std::isdigit(c)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  std::string validate_input(std::string field, std::string input,
+                             bool isNumber, bool isEmpty, bool noSpaces) {
+    if (isNumber && this->isNumber(input)) {
+      std::cout << field << " must be a number" << std::endl;
+      return "";
+    }
+
+    if (isEmpty && input.length() == 0) {
+      std::cout << field << " cannot be empty" << std::endl;
+      return "";
+    }
+
+    if (noSpaces && input.find(" ") != std::string::npos) {
+      std::cout << field << " cannot contain spaces" << std::endl;
+      return "";
+    }
+
+    return input;
+  }
 };
