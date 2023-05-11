@@ -80,7 +80,7 @@ public:
 
     if (copy_token.length() > 0)
     {
-      this->request.headers.add_field("Authorization", "Bearer " + copy_token);
+      this->request.cookies.add_field("connect.sid", copy_token);
     }
   };
 

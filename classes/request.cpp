@@ -8,7 +8,6 @@ class Request {
   std::string method;
   std::string host;
   std::string path;
-  std::string token;
   Header headers = Header();
   Cookie cookies = Cookie();
   Body body = Body();
@@ -17,12 +16,10 @@ class Request {
 
   Request(std::string host) { this->host = host; };
 
-  Request(std::string host, std::string method, std::string path,
-          std::string token = "") {
+  Request(std::string host, std::string method, std::string path) {
     this->host = host;
     this->method = method;
     this->path = path;
-    this->token = token;
   };
 
   std::string create_request() {

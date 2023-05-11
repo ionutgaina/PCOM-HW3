@@ -23,7 +23,7 @@ class Response {
   }
 
   std::string get_token() {
-    std::size_t start = response.find("connect.sid=");
+    std::size_t start = response.find("connect.sid=") + 12;
     if (start == std::string::npos) {
       return "";
     }
