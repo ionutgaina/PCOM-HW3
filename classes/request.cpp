@@ -36,8 +36,6 @@ class Request {
 
     std::string body_data = j_body.dump(JSON_ALIGN);
 
-    std::cout << body_data << std::endl;
-
     std::string request = this->method + " " + this->path + " HTTP/1.1\r\n";
     request += "Host: " + this->host + "\r\n";
     if (this->method == POST) {
@@ -64,6 +62,10 @@ class Request {
   bool is_valid() {
     return this->method.length() > 0 && this->host.length() > 0 &&
            this->path.length() > 0;
+  }
+
+  void add_param(std::string param) {
+    this->path += "/" + param;
   }
 
  private:

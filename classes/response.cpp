@@ -56,7 +56,7 @@ class Response {
     }
   }
 
-  void print_result() {
+  bool print_result() {
     std::string body = this->get_body();
     std::string status_code = this->get_status_code();
     if (json::accept(body)) {
@@ -65,9 +65,10 @@ class Response {
         std::string error = body_j["error"];
         error.erase(std::remove(error.begin(), error.end(), '\"'), error.end());
         std::cout << status_code << " - " << error << std::endl;
-        return;
+        return false;
       }
     }
     std::cout << status_code << std::endl;
+    return true;
   }
 };

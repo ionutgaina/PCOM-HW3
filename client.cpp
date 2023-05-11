@@ -46,26 +46,34 @@ int main(int argc, char *argv[]) {
     sockfd = open_connection(HOST, PORT, AF_INET, SOCK_STREAM, 0);
 
     std::string request_string = cmd.create_request();
+    if (request_string == "") {
+      close_connection(sockfd);
+      continue;
+    }
     send_to_server(sockfd, request_string.c_str());
     response = receive_from_server(sockfd);
     Response res = Response(response);
-    res.print_result();
+    bool ok = res.print_result();
 
-    if (command == "login") {
+    if (command == "login" && ok) {
       session_cookie = res.get_session_cookie();
     }
 
-    if (command == "enter_library") {
+    if (command == "enter_library" && ok) {
       token = res.get_token();
     }
 
-    if (command == "get_books") {
-        res.print_books();
+    if (command == "get_books" && ok) {
+      res.print_books();
     }
 
     if (command == "logout") {
       token = "";
       session_cookie = "";
+    }
+
+    if (command == "get_book" && ok) {
+      res.print_books();
     }
 
     if (response != NULL || response != nullptr) {
