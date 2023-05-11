@@ -23,7 +23,6 @@ char *compute_get_request(char *host, char *url, char *token) {
   sprintf(line, "Host: %s", host);
   compute_message(message, line);
 
-  printf("Token: %s\n", token);
   if (token != NULL) {
     sprintf(line, "Authorization: Bearer %s", token);
     compute_message(message, line);

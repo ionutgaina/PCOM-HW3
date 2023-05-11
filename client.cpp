@@ -56,10 +56,10 @@ int main(int argc, char* argv[]) {
 
   std::string command;
   while (1) {
-    if (message != nullptr) {
+    if (message != nullptr || response != NULL) {
       free(message);
     }
-    if (response != nullptr) {
+    if (response != nullptr || response != NULL) {
       free(response);
     }
 
@@ -81,17 +81,19 @@ int main(int argc, char* argv[]) {
     else if (command == "login") {
       message = login_req();
       response = send_req(sockfd, message);
-
-      if (error_handler(response))
+      if (error_handler(response)) {
         continue;
-      else {
+      } else {
         char* aux = new char[strlen(response) + 1];
         strcpy(aux, response);
         success_handler(response, "Login successful");
         if (token != NULL) {
           token = NULL;
         }
-        token = get_token(aux);
+        
+        char *mytoken = get_token(aux);
+        token = new char[strlen(mytoken) + 1];
+        strcpy(token, mytoken);
         delete[] aux;
       }
     }
@@ -113,16 +115,19 @@ int main(int argc, char* argv[]) {
       message = logout_req(token);
       response = send_req(sockfd, message);
       if (error_handler(response)) continue;
-
       success_handler(response, "Logout successful");
-      if (token != NULL) {
-        token = NULL;
+      if (token != nullptr) {
+        delete[] token;
       }
     } else if (command == "exit") {
       break;
     } else {
       printf("Invalid command\n");
     }
+  }
+
+  if (token != nullptr || token != NULL) {
+    delete[] token;
   }
 
   close_connection(sockfd);
@@ -230,9 +235,7 @@ char* get_data(char* response) {
 }
 
 char* get_token(char* response) {
-  char* token = strstr(response, "connect.sid");
-  strtok(token, "=");
-  token = strtok(NULL, ";");
-  printf("%s\n", token);
+  char* token = strstr(response, "connect.sid=");
+  token = strtok(token, ";");
   return token;
 }
