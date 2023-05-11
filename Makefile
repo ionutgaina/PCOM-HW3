@@ -1,10 +1,11 @@
 CC=g++ -ggdb3 -std=c++11
 CFLAGS=-I.
 
-CPP_FILES := $(wildcard *.cpp)
+UTILS_FILES := $(wildcard ./utils/*.cpp)
+CLASSES_FILES := $(wildcard ./classes/*.cpp)
 
-client: ${CPP_FILES}
-	$(CC) -o client ${CPP_FILES} -Wall
+client: client.cpp ${UTILS_FILES} ${CLASSES_FILES}
+	$(CC) -o client client.cpp ${UTILS_FILES} -Wall
 
 run: client
 	valgrind --leak-check=full \
