@@ -84,5 +84,6 @@ int main(int argc, char *argv[]) {
 
   // // free the allocated data at the end!
   token.clear();
+  session_cookie.clear();
   return 0;
 }

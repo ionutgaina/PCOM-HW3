@@ -16,10 +16,4 @@ class Header {
     }
     return headers;
   };
-
-  void print_header() {
-    for (auto it = this->fields.begin(); it != this->fields.end(); it++) {
-      std::cout << it->first << " " << it->second << std::endl;
-    }
-  };
 };
